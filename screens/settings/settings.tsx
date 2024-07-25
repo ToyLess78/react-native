@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import {ThemeContext} from "../../contexts";
+import { useTheme } from "../../hooks";
 
 export const Settings = () => {
-    const themeContext = useContext(ThemeContext);
+    const themeContext = useTheme();
 
     if (!themeContext) {
         throw new Error('Settings must be used within a ThemeProvider');

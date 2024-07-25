@@ -2,14 +2,11 @@ import {ActivityIndicator, StyleSheet, View} from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { RootNavigator } from "./navigation";
 import { ThemeProvider } from "./contexts";
-import {useFonts} from "expo-font";
+import { useLoadFonts } from "./hooks";
 
 export default function App() {
 
-	const [fontsLoaded] = useFonts({
-		'LobsterTwo-Regular': require('./assets/fonts/LobsterTwo-Regular.otf'),
-		'LobsterTwo-Italic': require('./assets/fonts/LobsterTwo-Italic.otf'),
-	});
+	const fontsLoaded = useLoadFonts();
 
 	if (!fontsLoaded) {
 		return (

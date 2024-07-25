@@ -1,15 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { Dashboard, Settings } from '../screens';
 import { BottomTabsParamList } from '../types';
 import { ROUTE_NAME } from '../enums';
-import {ThemeContext} from "../contexts";
+import { useTheme } from "../hooks";
 
 const BottomTabs = createBottomTabNavigator<BottomTabsParamList>();
 
 const BottomTabsNavigator = () => {
-    const themeContext = useContext(ThemeContext);
+    const themeContext = useTheme();
 
     if (!themeContext) {
         throw new Error('BottomTabsNavigator must be used within a ThemeProvider');
