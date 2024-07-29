@@ -1,11 +1,13 @@
-import {ActivityIndicator, StyleSheet, View} from "react-native";
+import React from 'react';
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
 import { RootNavigator } from "./navigation";
-import { ThemeProvider } from "./contexts";
 import { useLoadFonts } from "./hooks";
+import { ThemeProvider } from "./contexts";
+
 
 export default function App() {
-
 	const fontsLoaded = useLoadFonts();
 
 	if (!fontsLoaded) {
@@ -15,10 +17,13 @@ export default function App() {
 			</View>
 		);
 	}
+
 	return (
 		<SafeAreaProvider>
 			<ThemeProvider>
-				<RootNavigator />
+				<NavigationContainer>
+					<RootNavigator />
+				</NavigationContainer>
 			</ThemeProvider>
 		</SafeAreaProvider>
 	);

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme } from "../../hooks";
+import { ScreenBackground } from "../../components";
+
 
 export const Dashboard = () => {
     const themeContext = useTheme();
@@ -12,9 +14,11 @@ export const Dashboard = () => {
     const { theme } = themeContext;
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.APP_BACKGROUND }]}>
-            <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Welcome to the Dashboard!</Text>
-        </View>
+        <ScreenBackground>
+            <View style={[styles.container]}>
+                <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Welcome to the Dashboard!</Text>
+            </View>
+        </ScreenBackground>
     );
 };
 

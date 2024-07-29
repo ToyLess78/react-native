@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useTheme } from "../../hooks";
+import { ScreenBackground } from "../../components";
+
 
 export const Settings = () => {
     const themeContext = useTheme();
@@ -12,10 +14,12 @@ export const Settings = () => {
     const { theme, toggleTheme } = themeContext;
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.APP_BACKGROUND }]}>
-            <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Settings</Text>
-            <Button title="Toggle Theme" onPress={toggleTheme} color={theme.PRIMARY} />
-        </View>
+        <ScreenBackground>
+            <View style={styles.container}>
+                <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Settings</Text>
+                <Button title="Toggle Theme" onPress={toggleTheme} color={theme.PRIMARY} />
+            </View>
+        </ScreenBackground>
     );
 };
 

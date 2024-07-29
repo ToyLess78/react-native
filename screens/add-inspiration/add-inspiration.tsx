@@ -1,11 +1,24 @@
-import {StyleSheet, Text, View} from "react-native";
-import React from "react";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from "../../hooks";
+import { ScreenBackground } from "../../components";
+
 
 const AddInspiration: React.FC = () => {
+    const themeContext = useTheme();
+
+    if (!themeContext) {
+        throw new Error('AddInspiration must be used within a ThemeProvider');
+    }
+
+    const { theme } = themeContext;
+
     return (
-        <View style={styles.container}>
-            <Text>Add Inspiration Screen</Text>
-        </View>
+        <ScreenBackground>
+            <View style={[styles.container, { backgroundColor: theme.APP_BACKGROUND }]}>
+                <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Add Inspiration Screen</Text>
+            </View>
+        </ScreenBackground>
     );
 };
 
