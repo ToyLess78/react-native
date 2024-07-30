@@ -15,7 +15,6 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeType>(COLORS_LIGHT);
 
-  // Логіка для отримання теми з AsyncStorage
   useEffect(() => {
     const loadTheme = async () => {
       try {
@@ -31,7 +30,6 @@ const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     loadTheme();
   }, []);
 
-  // Логіка для перемикання теми
   const toggleTheme = async () => {
     try {
       const newTheme = theme === COLORS_LIGHT ? COLORS_DARK : COLORS_LIGHT;
