@@ -19,7 +19,6 @@ export const ScreenBackground: React.FC<{ children: React.ReactNode }> = ({ chil
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
