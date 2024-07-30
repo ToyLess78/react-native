@@ -13,19 +13,21 @@ type NavigationRoute = (typeof ROUTE_NAME)[keyof typeof ROUTE_NAME];
 type RootStackParamList = {
 	[ROUTE_NAME.BOTTOM_TABS_NAVIGATOR]: NavigatorScreenParams<BottomTabsParamList>;
 	[ROUTE_NAME.ADD_INSPIRATION]: undefined;
+	Dashboard: {
+		inspiration?: Inspiration;
+	};
 };
 
 type BottomTabsParamList = {
 	[ROUTE_NAME.DASHBOARD]:
 		| {
-				inspiration?: Inspiration;
-		  }
+		inspiration?: Inspiration;
+	}
 		| undefined;
 	[ROUTE_NAME.SETTINGS]: undefined;
 };
 
 declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace ReactNavigation {
 		interface RootParamList extends RootStackParamList {}
 	}
