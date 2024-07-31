@@ -2,11 +2,11 @@ import React from 'react';
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from '../hooks';
 import { BottomTabsNavigator } from './bottom-tabs-navigator';
 import { AddInspiration } from '../screens';
 import { RootStackParamList } from '../types';
 import { ROUTE_NAME } from '../enums';
-import { useTheme } from "../hooks";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
