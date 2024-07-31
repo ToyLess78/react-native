@@ -1,5 +1,14 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Alert, ImageSourcePropType, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+    Alert,
+    ImageSourcePropType,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -95,33 +104,38 @@ const AddInspiration: React.FC = () => {
     };
 
     return (
-        <ScreenBackground>
-            <View style={styles.container}>
-                <InspirationCard quote={quote} imageUrl={typeof image === 'string' ? image : require('../../assets/no-image.jpg')} />
-                <View style={styles.buttonRow}>
-                    <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton}/>
-                    <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} style={styles.flexButton}/>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+            <ScreenBackground>
+                <View style={styles.container}>
+                    <InspirationCard quote={quote} imageUrl={typeof image === 'string' ? image : require('../../assets/no-image.jpg')} />
+                    <View style={styles.buttonRow}>
+                        <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton} />
+                        <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} />
+                    </View>
+                    <TextInput
+                        style={[styles.textInput, { color: theme.FONT_MAIN, borderColor: theme.PRIMARY }]}
+                        placeholder="Enter your quote here..."
+                        placeholderTextColor={theme.SECONDARY}
+                        value={quote}
+                        onChangeText={setQuote}
+                        multiline
+                    />
+                    <View style={styles.buttonContainer}>
+                        <CustomButton title="Get a Random Quote" onPress={getRandomInspirationQuote} />
+                    </View>
+                    <CustomButton
+                        title="Save"
+                        onPress={() => navigation.navigate('Dashboard', { inspiration: { quote, image_url: image as string } })}
+                        disabled={!image || !quote}
+                        style={[{ backgroundColor: theme.PRIMARY }]}
+                        isInverse
+                    />
                 </View>
-                <TextInput
-                    style={[styles.textInput, { color: theme.FONT_MAIN, borderColor: theme.PRIMARY }]}
-                    placeholder="Enter your quote here..."
-                    placeholderTextColor={theme.SECONDARY}
-                    value={quote}
-                    onChangeText={setQuote}
-                    multiline
-                />
-                <View style={styles.buttonContainer}>
-                    <CustomButton title="Get a Random Quote" onPress={getRandomInspirationQuote} />
-                </View>
-                <CustomButton
-                    title="Save"
-                    onPress={() => navigation.navigate('Dashboard', { inspiration: { quote, image_url: image as string } })}
-                    disabled={!image || !quote}
-                    style={[{ backgroundColor: theme.PRIMARY }]}
-                    isInverse
-                />
-            </View>
-        </ScreenBackground>
+            </ScreenBackground>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -155,7 +169,7 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         marginRight: 10,
-    }
+    },
 });
 
 export { AddInspiration };
