@@ -15,7 +15,7 @@ const AddInspiration: React.FC = () => {
 
     return (
         <ScreenBackground>
-            <View style={[styles.container, { backgroundColor: theme.APP_BACKGROUND }]}>
+            <View style={styles.container}>
                 <Text style={{ color: theme.FONT_MAIN, fontFamily: 'LobsterTwo-Regular' }}>Add Inspiration Screen</Text>
             </View>
         </ScreenBackground>
