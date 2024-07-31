@@ -21,7 +21,7 @@ const RootNavigator = () => {
 	const { theme } = themeContext;
 
 	return (
-		<SafeAreaView style={{ marginTop: -40, paddingBottom: insets.bottom, flex: 1, backgroundColor: theme.APP_BACKGROUND }}>
+		<SafeAreaView style={{ paddingBottom: insets.bottom, flex: 1, backgroundColor: theme.APP_BACKGROUND }}>
 			<StatusBar />
 			<Stack.Navigator
 				initialRouteName={ROUTE_NAME.BOTTOM_TABS_NAVIGATOR}
