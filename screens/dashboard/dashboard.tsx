@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList, Inspiration } from '../../types';
 import { useTheme } from '../../hooks';
-import { ScreenBackground } from "../../components";
+import { ScreenBackground, InspirationCard } from "../../components";
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
@@ -31,7 +31,6 @@ export const Dashboard: React.FC = () => {
                     <Ionicons name="add-circle" size={30} color={themeContext?.theme.PRIMARY} style={styles.icon} />
                 </TouchableOpacity>
             ),
-
         });
     }, [navigation, themeContext]);
 
@@ -40,6 +39,7 @@ export const Dashboard: React.FC = () => {
     }
 
     const { theme } = themeContext;
+
     return (
         <ScreenBackground>
             <View style={styles.container}>
@@ -53,12 +53,10 @@ export const Dashboard: React.FC = () => {
                         data={inspirations}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
-                            <View style={[styles.inspirationCard, { backgroundColor: theme.SECONDARY }]}>
-                                <Text style={{ color: theme.FONT_MAIN }}>{item.quote}</Text>
-                                {item.image_url && (
-                                    <Image source={{ uri: item.image_url }} style={styles.image} />
-                                )}
-                            </View>
+                            <InspirationCard
+                                quote={item.quote || ''}
+                                imageUrl={item.image_url || require('../../assets/no-image.jpg')}
+                            />
                         )}
                     />
                 )}
@@ -85,17 +83,6 @@ const styles = StyleSheet.create({
     placeholderText: {
         fontFamily: 'LobsterTwo-Italic',
         fontSize: 24,
-    },
-    inspirationCard: {
-        padding: 16,
-        marginVertical: 8,
-        borderRadius: 8,
-    },
-    image: {
-        width: '100%',
-        height: 200,
-        resizeMode: 'cover',
-        borderRadius: 8,
     },
     icon: {
         marginRight: 10,
