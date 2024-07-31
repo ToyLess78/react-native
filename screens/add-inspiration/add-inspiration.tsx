@@ -116,7 +116,7 @@ const AddInspiration: React.FC = () => {
                         <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} />
                     </View>
                     <TextInput
-                        style={[styles.textInput, { color: theme.FONT_MAIN, borderColor: theme.PRIMARY }]}
+                        style={[styles.textInput, { color: theme.SECONDARY, borderColor: theme.PRIMARY }]}
                         placeholder="Enter your quote here..."
                         placeholderTextColor={theme.SECONDARY}
                         value={quote}

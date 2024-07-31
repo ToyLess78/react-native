@@ -46,7 +46,7 @@ export const Dashboard: React.FC = () => {
                 {inspirations.length === 0 ? (
                     <View style={styles.placeholderContainer}>
                         <Image source={require('../../assets/empty-placeholder.png')} style={styles.placeholderImage} />
-                        <Text style={[styles.placeholderText, { color: theme.FONT_MAIN }]}>No inspirations yet</Text>
+                        <Text style={[styles.placeholderText, { color: theme.SECONDARY }]}>No inspirations yet</Text>
                     </View>
                 ) : (
                     <FlatList
