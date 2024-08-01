@@ -1,11 +1,12 @@
-import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { RootStackParamList, Inspiration } from '../../types';
+import { Inspiration, RootStackParamList } from '../../types';
 import { useTheme } from '../../hooks';
-import { ScreenBackground, InspirationCard } from "../../components";
+import { InspirationCard, ScreenBackground } from '../../components';
+import styles from './styles';
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
@@ -64,27 +65,3 @@ export const Dashboard: React.FC = () => {
         </ScreenBackground>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    placeholderContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    placeholderImage: {
-        width: 200,
-        height: 200,
-        marginBottom: 16,
-    },
-    placeholderText: {
-        fontFamily: 'LobsterTwo-Italic',
-        fontSize: 24,
-    },
-    icon: {
-        marginRight: 10,
-    },
-});

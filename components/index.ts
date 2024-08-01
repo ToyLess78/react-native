@@ -1,2 +1,3 @@
-export { InspirationCard } from "./inspiration-card";
-export { ScreenBackground } from "./screen-background";
+export { CustomButton } from './custom-button/custom-button';
+export { InspirationCard } from './inspiration-card/inspiration-card';
+export { ScreenBackground } from './screen-background/screen-background';

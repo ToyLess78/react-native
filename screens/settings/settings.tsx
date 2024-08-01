@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Switch, View } from 'react-native';
+import { Switch, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../hooks';
 import { ScreenBackground } from '../../components';
-import { COLORS_DARK } from "../../constants";
+import { COLORS_DARK } from '../../constants';
+import styles from './styles';
 
 export const Settings: React.FC = () => {
     const themeContext = useTheme();
@@ -31,18 +32,3 @@ export const Settings: React.FC = () => {
         </ScreenBackground>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    switchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    icon: {
-        marginHorizontal: 10,
-    },
-});

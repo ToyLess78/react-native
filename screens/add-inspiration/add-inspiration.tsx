@@ -4,7 +4,6 @@ import {
     ImageSourcePropType,
     KeyboardAvoidingView,
     Platform,
-    StyleSheet,
     TextInput,
     TouchableOpacity,
     View
@@ -12,13 +11,13 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import { InspirationCard, ScreenBackground } from '../../components';
-import { CustomButton } from '../../components/custom-button';
+import { CustomButton, InspirationCard, ScreenBackground } from '../../components';
 import { useTheme } from '../../hooks';
-import { getRandomImage } from "../../services/getRandomImage";
-import { getRandomQuote } from "../../services/getRandomQuote";
+import { getRandomImage } from '../../services/getRandomImage';
+import { getRandomQuote } from '../../services/getRandomQuote';
 import { RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import styles from './styles';
 
 type AddInspirationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AddInspiration'>;
 
@@ -138,38 +137,5 @@ const AddInspiration: React.FC = () => {
         </KeyboardAvoidingView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        gap: 10,
-        marginVertical: 10,
-    },
-    flexButton: {
-        flex: 1,
-    },
-    textInput: {
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 5,
-        marginVertical: 10,
-        height: 100,
-        textAlignVertical: 'top',
-    },
-    buttonContainer: {
-        marginVertical: 10,
-    },
-    saveButton: {
-        fontSize: 18,
-        marginRight: 10,
-    },
-    iconContainer: {
-        marginRight: 10,
-    },
-});
 
 export { AddInspiration };

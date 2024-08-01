@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
-import { useTheme } from '../hooks';
+import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { useTheme } from '../../hooks';
+import styles from './styles';
 
 interface CustomButtonProps {
     title: string;
@@ -36,20 +37,5 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, disabled = 
         </TouchableOpacity>
     );
 };
-
-const styles = StyleSheet.create({
-    button: {
-        borderWidth: 1,
-        borderRadius: 5,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 10,
-    },
-    buttonText: {
-        fontSize: 14,
-        fontFamily: 'LobsterTwo-Regular',
-    },
-});
 
 export { CustomButton };
