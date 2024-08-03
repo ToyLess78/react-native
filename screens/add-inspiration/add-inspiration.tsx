@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
     Alert,
     ImageSourcePropType,
@@ -18,6 +18,11 @@ import { getRandomQuote } from '../../services/getRandomQuote';
 import { Inspiration, RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
+import { createInspiration, modifyInspiration } from '../../store/inspirationSlice';
+import { addInspiration } from '../../store/dbUtils';
+import { AppDispatch } from '../../store/store';
+import { useDispatch } from 'react-redux';
+import { useGestureContext } from '../../contexts/gesture-context';
 
 type AddInspirationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AddInspiration'>;
 type AddInspirationRouteProp = RouteProp<RootStackParamList, 'AddInspiration'>;
@@ -33,11 +38,18 @@ const AddInspiration: React.FC = () => {
         inspiration?.image_url || require('../../assets/no-image.jpg')
     );
 
+    const { closeActiveSwipeable } = useGestureContext();
+
     if (!themeContext) {
         throw new Error('AddInspiration must be used within a ThemeProvider');
     }
 
     const { theme } = themeContext;
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        closeActiveSwipeable();
+    }, [closeActiveSwipeable]);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -59,15 +71,29 @@ const AddInspiration: React.FC = () => {
         });
     }, [navigation, theme, image, quote]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (image && quote) {
-            const newInspiration: Inspiration = {
-                id: inspiration?.id || Date.now(),
-                quote,
-                image_url: image as string,
-            };
-
-            navigation.navigate('Dashboard', { inspiration: newInspiration });
+            if (inspiration && inspiration.id !== undefined) {
+                const updatedInspiration: Inspiration = {
+                    ...inspiration,
+                    quote,
+                    image_url: image as string,
+                    id: inspiration.id
+                };
+                dispatch(modifyInspiration(updatedInspiration));
+            } else {
+                const newInspiration: Inspiration = {
+                    id: 0,
+                    quote,
+                    image_url: image as string,
+                };
+                const newId = await addInspiration(newInspiration);
+                if (newId) {
+                    newInspiration.id = newId;
+                    dispatch(createInspiration(newInspiration));
+                }
+            }
+            navigation.goBack();
         }
     };
 

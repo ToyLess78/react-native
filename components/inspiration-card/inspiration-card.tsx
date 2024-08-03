@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ImageBackground, ImageSourcePropType, Text, View } from 'react-native';
+import { ImageBackground, ImageSourcePropType, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../hooks';
@@ -39,8 +39,8 @@ const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url 
         : styles.textContainer;
 
     const handleSwipeableOpen = () => {
-        if (activeSwipeable && activeSwipeable.current !== swipeableRef.current) {
-            activeSwipeable.current?.close();
+        if (activeSwipeable.current !== swipeableRef.current) {
+            activeSwipeable.current?.current?.close();
         }
         setActiveSwipeable(swipeableRef);
     };
@@ -64,14 +64,14 @@ const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url 
             ref={swipeableRef}
             onSwipeableOpen={handleSwipeableOpen}
             renderLeftActions={() => (
-                <View style={[styles.leftAction]}>
-                    <Ionicons name="create" size={30} color={theme.PRIMARY} onPress={handleEdit} />
-                </View>
+                <TouchableOpacity style={[styles.leftAction]} onPress={handleEdit}>
+                    <Ionicons name="create" size={30} color={theme.SECONDARY} />
+                </TouchableOpacity>
             )}
             renderRightActions={() => (
-                <View style={[styles.rightAction]}>
-                    <Ionicons name="trash" size={30} color={theme.PRIMARY} onPress={handleDelete} />
-                </View>
+                <TouchableOpacity style={[styles.rightAction]} onPress={handleDelete}>
+                    <Ionicons name="trash" size={30} color={theme.PRIMARY} />
+                </TouchableOpacity>
             )}
         >
             <View style={styles.cardContainer}>

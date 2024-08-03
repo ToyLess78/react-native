@@ -1,18 +1,33 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useRef } from 'react';
 import { Swipeable } from 'react-native-gesture-handler';
 
 interface GestureContextType {
-    activeSwipeable: React.RefObject<Swipeable> | null;
-    setActiveSwipeable: React.Dispatch<React.SetStateAction<React.RefObject<Swipeable> | null>>;
+    activeSwipeable: React.MutableRefObject<React.RefObject<Swipeable> | null>;
+    setActiveSwipeable: (swipeable: React.RefObject<Swipeable> | null) => void;
+    closeActiveSwipeable: () => void;
 }
 
 const GestureContext = createContext<GestureContextType | undefined>(undefined);
 
 export const GestureProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [activeSwipeable, setActiveSwipeable] = useState<React.RefObject<Swipeable> | null>(null);
+    const activeSwipeableRef = useRef<React.RefObject<Swipeable> | null>(null);
+
+    const setActiveSwipeable = (swipeable: React.RefObject<Swipeable> | null) => {
+        if (activeSwipeableRef.current && activeSwipeableRef.current !== swipeable) {
+            activeSwipeableRef.current.current?.close();
+        }
+        activeSwipeableRef.current = swipeable;
+    };
+
+    const closeActiveSwipeable = () => {
+        if (activeSwipeableRef.current) {
+            activeSwipeableRef.current.current?.close();
+        }
+        activeSwipeableRef.current = null;
+    };
 
     return (
-        <GestureContext.Provider value={{ activeSwipeable, setActiveSwipeable }}>
+        <GestureContext.Provider value={{ activeSwipeable: activeSwipeableRef, setActiveSwipeable, closeActiveSwipeable }}>
             {children}
         </GestureContext.Provider>
     );

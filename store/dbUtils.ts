@@ -24,23 +24,23 @@ export const initDb = async () => {
     }
 };
 
-export const addInspiration = async (inspiration: Inspiration): Promise<void> => {
-    const {quote, image_url} = inspiration;
-
+export const addInspiration = async (inspiration: Inspiration): Promise<number | undefined> => {
+    const { quote, image_url } = inspiration;
     try {
         const result = await db.runAsync(
-            `INSERT INTO inspirations (quote, image_url)
-             VALUES (?, ?)`,
+            `INSERT INTO inspirations (quote, image_url) VALUES (?, ?)`,
             [quote, image_url]
         );
-
         if (result.lastInsertRowId) {
             console.log(`Inspiration added with ID: ${result.lastInsertRowId}`);
+            return result.lastInsertRowId;
         }
     } catch (error) {
         console.error('Error adding inspiration:', error);
     }
+    return undefined;
 };
+
 
 export const getInspirations = async (): Promise<Inspiration[]> => {
     try {
