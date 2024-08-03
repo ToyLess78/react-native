@@ -31,6 +31,18 @@ const styles = StyleSheet.create({
         fontSize: 14,
         textAlign: 'center',
     },
+    leftAction: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        width: '20%',
+        paddingLeft: 20,
+    },
+    rightAction: {
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        width: '20%',
+        paddingRight: 20,
+    },
 });
 
 export default styles;

@@ -7,6 +7,8 @@ import { useLoadFonts } from './hooks';
 import { ThemeProvider } from './contexts';
 import store from './store/store';
 import { Provider } from 'react-redux';
+import { GestureProvider } from './contexts/gesture-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 export default function App() {
@@ -21,15 +23,19 @@ export default function App() {
 	}
 
 	return (
-		<Provider store={store}>
-			<SafeAreaProvider>
-				<ThemeProvider>
-					<NavigationContainer>
-						<RootNavigator/>
-					</NavigationContainer>
-				</ThemeProvider>
-			</SafeAreaProvider>
-		</Provider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<Provider store={store}>
+				<GestureProvider>
+				<SafeAreaProvider>
+					<ThemeProvider>
+						<NavigationContainer>
+							<RootNavigator/>
+						</NavigationContainer>
+					</ThemeProvider>
+				</SafeAreaProvider>
+				</GestureProvider>
+			</Provider>
+		</GestureHandlerRootView>
 	);
 }
 

@@ -10,7 +10,7 @@ import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { createInspiration, fetchInspirations } from '../../store/inspirationSlice';
-import { sortInspirations } from '../../helpers'; // Імпортуємо хелпер
+import { sortInspirations } from '../../helpers';
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
