@@ -20,7 +20,18 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     icon: {
-        marginRight: 10,
+        marginRight: 15,
+    },
+    loadingText: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 20,
+    },
+    errorText: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginVertical: 20,
+        color: 'red',
     },
 });
 

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Inspiration } from '../types';
-import { addInspiration, getInspirations, initDb } from './dbUtils';
-
+import { addInspiration, getInspirations, updateInspiration, deleteInspiration, initDb } from './dbUtils';
 
 interface InspirationState {
     inspirations: Inspiration[];
@@ -28,6 +27,22 @@ export const createInspiration = createAsyncThunk(
     }
 );
 
+export const modifyInspiration = createAsyncThunk(
+    'inspirations/modifyInspiration',
+    async (inspiration: Inspiration) => {
+        await updateInspiration(inspiration.id!, inspiration);
+        return inspiration;
+    }
+);
+
+export const removeInspiration = createAsyncThunk(
+    'inspirations/removeInspiration',
+    async (id: number) => {
+        await deleteInspiration(id);
+        return id;
+    }
+);
+
 const inspirationSlice = createSlice({
     name: 'inspirations',
     initialState,
@@ -47,6 +62,15 @@ const inspirationSlice = createSlice({
             })
             .addCase(createInspiration.fulfilled, (state, action: PayloadAction<Inspiration>) => {
                 state.inspirations.push(action.payload);
+            })
+            .addCase(modifyInspiration.fulfilled, (state, action: PayloadAction<Inspiration>) => {
+                const index = state.inspirations.findIndex(insp => insp.id === action.payload.id);
+                if (index !== -1) {
+                    state.inspirations[index] = action.payload;
+                }
+            })
+            .addCase(removeInspiration.fulfilled, (state, action: PayloadAction<number>) => {
+                state.inspirations = state.inspirations.filter(insp => insp.id !== action.payload);
             });
     },
 });

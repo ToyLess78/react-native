@@ -44,10 +44,55 @@ export const addInspiration = async (inspiration: Inspiration): Promise<void> =>
 
 export const getInspirations = async (): Promise<Inspiration[]> => {
     try {
-        const results = await db.getAllAsync<Inspiration>('SELECT * FROM inspirations');
-        return results;
+        return await db.getAllAsync<Inspiration>('SELECT * FROM inspirations');
     } catch (error) {
         console.error('Error fetching inspirations:', error);
         return [];
     }
 };
+
+export const updateInspiration = async (id: number, inspiration: Partial<Inspiration>): Promise<void> => {
+    const { quote, image_url } = inspiration;
+
+    if (!quote || !image_url) {
+        console.error('Quote and image URL are required to update an inspiration');
+        return;
+    }
+
+    try {
+        const result = await db.runAsync(
+            `UPDATE inspirations
+             SET quote = ?, image_url = ?, updated_at = CURRENT_TIMESTAMP
+             WHERE id = ?`,
+            [quote, image_url, id]
+        );
+
+        if (result.changes > 0) {
+            console.log(`Inspiration with ID: ${id} updated successfully`);
+        } else {
+            console.log(`No inspiration found with ID: ${id}`);
+        }
+    } catch (error) {
+        console.error(`Error updating inspiration with ID: ${id}`, error);
+    }
+};
+
+
+export const deleteInspiration = async (id: number): Promise<void> => {
+    try {
+        const result = await db.runAsync(
+            `DELETE FROM inspirations WHERE id = ?`,
+            [id]
+        );
+
+        if (result.changes > 0) {
+            console.log(`Inspiration with ID: ${id} deleted successfully`);
+        } else {
+            console.log(`No inspiration found with ID: ${id}`);
+        }
+    } catch (error) {
+        console.error(`Error deleting inspiration with ID: ${id}`, error);
+    }
+};
+
+

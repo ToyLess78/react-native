@@ -1,12 +1,16 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { Inspiration, RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../types';
 import { useTheme } from '../../hooks';
 import { InspirationCard, ScreenBackground } from '../../components';
 import styles from './styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { createInspiration, fetchInspirations } from '../../store/inspirationSlice';
+
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
@@ -15,14 +19,23 @@ export const Dashboard: React.FC = () => {
     const themeContext = useTheme();
     const navigation = useNavigation<DashboardScreenNavigationProp>();
     const route = useRoute<DashboardScreenRouteProp>();
-    const [inspirations, setInspirations] = useState<Inspiration[]>([]);
+    const dispatch = useDispatch<AppDispatch>();
+    const inspirations = useSelector((state: RootState) => state.inspirations.inspirations);
+    const status = useSelector((state: RootState) => state.inspirations.status);
+    const error = useSelector((state: RootState) => state.inspirations.error);
+
+    useEffect(() => {
+        if (status === 'idle') {
+            dispatch(fetchInspirations());
+        }
+    }, [status, dispatch]);
 
     useEffect(() => {
         if (route.params?.inspiration) {
             const newInspiration = route.params.inspiration;
-            setInspirations((prev) => [...prev, newInspiration]);
+            dispatch(createInspiration(newInspiration));
         }
-    }, [route.params?.inspiration]);
+    }, [route.params?.inspiration, dispatch]);
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -44,7 +57,13 @@ export const Dashboard: React.FC = () => {
     return (
         <ScreenBackground>
             <View style={styles.container}>
-                {inspirations.length === 0 ? (
+                {status === 'loading' && (
+                    <Text style={[styles.loadingText, { color: theme.SECONDARY }]}>Loading...</Text>
+                )}
+                {status === 'failed' && (
+                    <Text style={[styles.errorText, { color: theme.ERROR }]}>Error: {error}</Text>
+                )}
+                {inspirations.length === 0 && status !== 'loading' ? (
                     <View style={styles.placeholderContainer}>
                         <Image source={require('../../assets/empty-placeholder.png')} style={styles.placeholderImage} />
                         <Text style={[styles.placeholderText, { color: theme.SECONDARY }]}>No inspirations yet</Text>
