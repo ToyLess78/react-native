@@ -15,7 +15,7 @@ import { CustomButton, InspirationCard, ScreenBackground } from '../../component
 import { useTheme } from '../../hooks';
 import { getRandomImage } from '../../services/getRandomImage';
 import { getRandomQuote } from '../../services/getRandomQuote';
-import { RootStackParamList } from '../../types';
+import { type RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 

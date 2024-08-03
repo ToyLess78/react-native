@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, ActivityIndicator } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
-import { RootNavigator } from "./navigation";
-import { useLoadFonts } from "./hooks";
-import { ThemeProvider } from "./contexts";
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { RootNavigator } from './navigation';
+import { useLoadFonts } from './hooks';
+import { ThemeProvider } from './contexts';
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 
 export default function App() {
@@ -13,19 +15,21 @@ export default function App() {
 	if (!fontsLoaded) {
 		return (
 			<View style={styles.loadingContainer}>
-				<ActivityIndicator size="large" />
+				<ActivityIndicator size="large"/>
 			</View>
 		);
 	}
 
 	return (
-		<SafeAreaProvider>
-			<ThemeProvider>
-				<NavigationContainer>
-					<RootNavigator />
-				</NavigationContainer>
-			</ThemeProvider>
-		</SafeAreaProvider>
+		<Provider store={store}>
+			<SafeAreaProvider>
+				<ThemeProvider>
+					<NavigationContainer>
+						<RootNavigator/>
+					</NavigationContainer>
+				</ThemeProvider>
+			</SafeAreaProvider>
+		</Provider>
 	);
 }
 
