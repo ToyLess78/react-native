@@ -33,6 +33,17 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         color: 'red',
     },
+    sortButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        marginBottom: 10,
+    },
+    sortButtonText: {
+        marginRight: 5,
+        fontSize: 12,
+        fontFamily: 'LobsterTwo-Italic',
+    },
 });
 
 export default styles;

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { createInspiration, fetchInspirations } from '../../store/inspirationSlice';
 
-
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
 
@@ -23,6 +22,8 @@ export const Dashboard: React.FC = () => {
     const inspirations = useSelector((state: RootState) => state.inspirations.inspirations);
     const status = useSelector((state: RootState) => state.inspirations.status);
     const error = useSelector((state: RootState) => state.inspirations.error);
+
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
     useEffect(() => {
         if (status === 'idle') {
@@ -54,6 +55,18 @@ export const Dashboard: React.FC = () => {
 
     const { theme } = themeContext;
 
+    const toggleSortOrder = () => {
+        setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
+    };
+
+    const sortedInspirations = [...inspirations].sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
+        } else {
+            return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+        }
+    });
+
     return (
         <ScreenBackground>
             <View style={styles.container}>
@@ -69,18 +82,33 @@ export const Dashboard: React.FC = () => {
                         <Text style={[styles.placeholderText, { color: theme.SECONDARY }]}>No inspirations yet</Text>
                     </View>
                 ) : (
-                    <FlatList
-                        data={inspirations}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <InspirationCard
-                                quote={item.quote || ''}
-                                imageUrl={item.image_url || require('../../assets/no-image.jpg')}
+                    <View>
+                        <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+
+                            <Text style={[styles.sortButtonText, { color: theme.PRIMARY }]}>
+                                {sortOrder === 'asc' ? 'Sort Ascending' : 'Sort Descending'}
+                            </Text>
+                            <Ionicons
+                                name={sortOrder === 'asc' ? 'arrow-up' : 'arrow-down'}
+                                size={16}
+                                color={theme.PRIMARY}
                             />
-                        )}
-                    />
+                        </TouchableOpacity>
+
+                        <FlatList
+                            data={sortedInspirations}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => (
+                                <InspirationCard
+                                    quote={item.quote || ''}
+                                    imageUrl={item.image_url || require('../../assets/no-image.jpg')}
+                                />
+                            )}
+                        />
+                    </View>
                 )}
             </View>
         </ScreenBackground>
     );
 };
+
