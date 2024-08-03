@@ -10,6 +10,7 @@ import styles from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { createInspiration, fetchInspirations } from '../../store/inspirationSlice';
+import { sortInspirations } from '../../helpers'; // Імпортуємо хелпер
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
@@ -59,13 +60,7 @@ export const Dashboard: React.FC = () => {
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
     };
 
-    const sortedInspirations = [...inspirations].sort((a, b) => {
-        if (sortOrder === 'asc') {
-            return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
-        } else {
-            return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-        }
-    });
+    const sortedInspirations = sortInspirations(inspirations, sortOrder);
 
     return (
         <ScreenBackground>
@@ -84,9 +79,8 @@ export const Dashboard: React.FC = () => {
                 ) : (
                     <View>
                         <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-
                             <Text style={[styles.sortButtonText, { color: theme.PRIMARY }]}>
-                                {sortOrder === 'asc' ? 'Sort Ascending' : 'Sort Descending'}
+                                Sort by date
                             </Text>
                             <Ionicons
                                 name={sortOrder === 'asc' ? 'arrow-up' : 'arrow-down'}
@@ -111,4 +105,3 @@ export const Dashboard: React.FC = () => {
         </ScreenBackground>
     );
 };
-
