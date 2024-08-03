@@ -1,5 +1,5 @@
 type Inspiration = {
-    id?: number;
+    id: number;
     quote: string;
     image_url: string;
     created_at?: string;

@@ -6,26 +6,32 @@ import {
     Platform,
     TextInput,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { CustomButton, InspirationCard, ScreenBackground } from '../../components';
 import { useTheme } from '../../hooks';
 import { getRandomImage } from '../../services/getRandomImage';
 import { getRandomQuote } from '../../services/getRandomQuote';
-import { type RootStackParamList } from '../../types';
+import { Inspiration, RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 
 type AddInspirationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AddInspiration'>;
+type AddInspirationRouteProp = RouteProp<RootStackParamList, 'AddInspiration'>;
 
 const AddInspiration: React.FC = () => {
     const themeContext = useTheme();
     const navigation = useNavigation<AddInspirationScreenNavigationProp>();
-    const [quote, setQuote] = useState('');
-    const [image, setImage] = useState<string | ImageSourcePropType>(require('../../assets/no-image.jpg'));
+    const route = useRoute<AddInspirationRouteProp>();
+
+    const { inspiration } = route.params || {};
+    const [quote, setQuote] = useState(inspiration?.quote || '');
+    const [image, setImage] = useState<string | ImageSourcePropType>(
+        inspiration?.image_url || require('../../assets/no-image.jpg')
+    );
 
     if (!themeContext) {
         throw new Error('AddInspiration must be used within a ThemeProvider');
@@ -43,19 +49,27 @@ const AddInspiration: React.FC = () => {
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity
-                    onPress={() => {
-                        if (image && quote) {
-                            navigation.navigate('Dashboard', { inspiration: { quote, image_url: image as string } });
-                        }
-                    }}
-                    disabled={!image || !quote}
-                >
+                <TouchableOpacity onPress={handleSave} disabled={!image || !quote}>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="checkmark" size={24} color={theme.PRIMARY} />
+                    </View>
                 </TouchableOpacity>
             ),
-            title: 'Add Inspiration',
+            title: inspiration ? 'Edit Inspiration' : 'Add Inspiration',
         });
     }, [navigation, theme, image, quote]);
+
+    const handleSave = () => {
+        if (image && quote) {
+            const newInspiration: Inspiration = {
+                id: inspiration?.id || Date.now(),
+                quote,
+                image_url: image as string,
+            };
+
+            navigation.navigate('Dashboard', { inspiration: newInspiration });
+        }
+    };
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -103,13 +117,15 @@ const AddInspiration: React.FC = () => {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <ScreenBackground>
                 <View style={styles.container}>
-                    <InspirationCard quote={quote} imageUrl={typeof image === 'string' ? image : require('../../assets/no-image.jpg')} />
+                    <InspirationCard
+                        id={inspiration?.id || 0}
+
+                        quote={quote}
+                        image_url={typeof image === 'string' ? image : require('../../assets/no-image.jpg')}
+                    />
                     <View style={styles.buttonRow}>
                         <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton} />
                         <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} />
@@ -127,7 +143,7 @@ const AddInspiration: React.FC = () => {
                     </View>
                     <CustomButton
                         title="Save"
-                        onPress={() => navigation.navigate('Dashboard', { inspiration: { quote, image_url: image as string } })}
+                        onPress={handleSave}
                         disabled={!image || !quote}
                         style={[{ backgroundColor: theme.PRIMARY }]}
                         isInverse

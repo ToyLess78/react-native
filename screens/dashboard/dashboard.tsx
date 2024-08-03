@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { createInspiration, fetchInspirations } from '../../store/inspirationSlice';
 import { sortInspirations } from '../../helpers';
+import { ROUTE_NAME } from '../../enums';
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, 'Dashboard'>;
@@ -43,7 +44,9 @@ export const Dashboard: React.FC = () => {
         navigation.setOptions({
             headerTitle: 'Find Your Inspiration',
             headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('AddInspiration')}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate(ROUTE_NAME.ADD_INSPIRATION, { inspiration: undefined })}
+                >
                     <Ionicons name="add-circle" size={30} color={themeContext?.theme.PRIMARY} style={styles.icon} />
                 </TouchableOpacity>
             ),
@@ -91,11 +94,12 @@ export const Dashboard: React.FC = () => {
 
                         <FlatList
                             data={sortedInspirations}
-                            keyExtractor={(item, index) => index.toString()}
+                            keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => (
                                 <InspirationCard
+                                    id={item.id}
                                     quote={item.quote || ''}
-                                    imageUrl={item.image_url || require('../../assets/no-image.jpg')}
+                                    image_url={item.image_url || require('../../assets/no-image.jpg')}
                                 />
                             )}
                         />
