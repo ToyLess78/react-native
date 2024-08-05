@@ -44,6 +44,10 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontFamily: 'LobsterTwo-Italic',
     },
+    emptyContainer: {
+        paddingVertical: '50%',
+        alignItems: 'center',
+    },
 });
 
 export default styles;

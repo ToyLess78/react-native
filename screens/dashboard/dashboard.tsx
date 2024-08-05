@@ -57,7 +57,7 @@ export const Dashboard: React.FC = () => {
         throw new Error('Dashboard must be used within a ThemeProvider');
     }
 
-    const { theme } = themeContext;
+    const {theme} = themeContext;
 
     const toggleSortOrder = () => {
         setSortOrder((prevSortOrder) => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
@@ -65,46 +65,48 @@ export const Dashboard: React.FC = () => {
 
     const sortedInspirations = sortInspirations(inspirations, sortOrder);
 
+    const renderListEmptyComponent = () => (
+        <View style={styles.emptyContainer}>
+            <Image source={require('../../assets/empty-placeholder.png')} style={styles.placeholderImage}/>
+            <Text style={[styles.placeholderText, {color: theme.SECONDARY}]}>No inspirations yet</Text>
+        </View>
+    );
+
     return (
         <ScreenBackground>
             <View style={styles.container}>
                 {status === 'loading' && (
-                    <Text style={[styles.loadingText, { color: theme.SECONDARY }]}>Loading...</Text>
+                    <Text style={[styles.loadingText, {color: theme.SECONDARY}]}>Loading...</Text>
                 )}
                 {status === 'failed' && (
-                    <Text style={[styles.errorText, { color: theme.ERROR }]}>Error: {error}</Text>
+                    <Text style={[styles.errorText, {color: theme.ERROR}]}>Error: {error}</Text>
                 )}
-                {inspirations.length === 0 && status !== 'loading' ? (
-                    <View style={styles.placeholderContainer}>
-                        <Image source={require('../../assets/empty-placeholder.png')} style={styles.placeholderImage} />
-                        <Text style={[styles.placeholderText, { color: theme.SECONDARY }]}>No inspirations yet</Text>
-                    </View>
-                ) : (
-                    <View>
-                        <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
-                            <Text style={[styles.sortButtonText, { color: theme.PRIMARY }]}>
-                                Sort by date
-                            </Text>
-                            <Ionicons
-                                name={sortOrder === 'asc' ? 'arrow-up' : 'arrow-down'}
-                                size={16}
-                                color={theme.PRIMARY}
-                            />
-                        </TouchableOpacity>
 
-                        <FlatList
-                            data={sortedInspirations}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={({ item }) => (
-                                <InspirationCard
-                                    id={item.id}
-                                    quote={item.quote || ''}
-                                    image_url={item.image_url || require('../../assets/no-image.jpg')}
-                                />
-                            )}
+                <View>
+                    <TouchableOpacity style={styles.sortButton} onPress={toggleSortOrder}>
+                        <Text style={[styles.sortButtonText, {color: theme.PRIMARY}]}>
+                            Sort by date
+                        </Text>
+                        <Ionicons
+                            name={sortOrder === 'asc' ? 'arrow-up' : 'arrow-down'}
+                            size={16}
+                            color={theme.PRIMARY}
                         />
-                    </View>
-                )}
+                    </TouchableOpacity>
+
+                    <FlatList
+                        data={sortedInspirations}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({item}) => (
+                            <InspirationCard
+                                id={item.id}
+                                quote={item.quote || ''}
+                                image_url={item.image_url || require('../../assets/no-image.jpg')}
+                            />
+                        )}
+                        ListEmptyComponent={renderListEmptyComponent}
+                    />
+                </View>
             </View>
         </ScreenBackground>
     );
