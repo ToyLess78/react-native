@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
     Alert,
     ImageSourcePropType,
@@ -11,6 +11,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 import { CustomButton, InspirationCard, ScreenBackground } from '../../components';
 import { useTheme } from '../../hooks';
 import { getRandomImage } from '../../services/getRandomImage';
@@ -47,6 +49,8 @@ const AddInspiration: React.FC = () => {
     const {theme} = themeContext;
     const dispatch = useDispatch<AppDispatch>();
 
+    const inspirationCardRef = useRef<View>(null);
+
     useEffect(() => {
         closeActiveSwipeable();
     }, [closeActiveSwipeable]);
@@ -75,8 +79,27 @@ const AddInspiration: React.FC = () => {
 
     const handleDelete = () => {
         if (inspiration && inspiration.id !== undefined) {
-            dispatch(removeInspiration(inspiration.id));
-            navigation.goBack();
+            Alert.alert(
+                'Confirm Deletion',
+                'Are you sure you want to delete this inspiration?',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Delete',
+                        onPress: () => {
+                            if (inspiration && inspiration.id !== undefined) {
+                                dispatch(removeInspiration(inspiration.id));
+                                navigation.goBack();
+                            }
+                        },
+                        style: 'destructive',
+                    },
+                ],
+                {cancelable: false}
+            );
         }
     };
 
@@ -151,15 +174,55 @@ const AddInspiration: React.FC = () => {
         setQuote(randomQuote.quoteText);
     };
 
+    const saveToGallery = async () => {
+        if (!image || !quote) {
+            Alert.alert('Incomplete Inspiration', 'Please complete the inspiration card before saving.');
+            return;
+        }
+
+        const {status} = await MediaLibrary.requestPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission Required', 'Permission to access gallery is required to save inspiration.');
+            return;
+        }
+
+        try {
+            if (!inspirationCardRef.current) {
+                Alert.alert('Error', 'Failed to capture image. Please try again.');
+                return;
+            }
+            const uri = await captureRef(inspirationCardRef.current, {
+                format: 'png',
+                quality: 0.8,
+            });
+
+            if (!uri) {
+                Alert.alert('Error', 'Failed to capture image. Please try again.');
+                return;
+            }
+
+            const asset = await MediaLibrary.createAssetAsync(uri);
+
+            await MediaLibrary.createAlbumAsync('Inspirations', asset, false);
+
+            Alert.alert('Success', 'Inspiration saved to gallery!');
+        } catch (error) {
+            console.error('Error saving inspiration to gallery', error);
+            Alert.alert('Error', 'Failed to save inspiration to gallery.');
+        }
+    };
+
     return (
         <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <ScreenBackground>
                 <View style={styles.container}>
-                    <InspirationCard
-                        id={inspiration?.id || 0}
-                        quote={quote}
-                        image_url={typeof image === 'string' ? image : require('../../assets/no-image.jpg')}
-                    />
+                    <View ref={inspirationCardRef} collapsable={false}>
+                        <InspirationCard
+                            id={inspiration?.id || 0}
+                            quote={quote}
+                            image_url={typeof image === 'string' ? image : require('../../assets/no-image.jpg')}
+                        />
+                    </View>
                     <View style={styles.buttonRow}>
                         <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton}/>
                         <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage}/>
@@ -199,11 +262,12 @@ const AddInspiration: React.FC = () => {
                                 <Ionicons name="save-sharp" size={30} color={theme.PRIMARY}/>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={pickImage}
+                                onPress={saveToGallery}
+                                disabled={!image || !quote}
                                 style={[
                                     styles.iconButton,
                                     {
-                                        backgroundColor: theme.PRIMARY,
+                                        backgroundColor: image && quote ? theme.PRIMARY : 'gray',
                                     }
                                 ]}
                             >

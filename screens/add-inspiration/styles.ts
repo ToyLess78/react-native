@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         marginTop: 'auto',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginBottom: 16,
+        paddingHorizontal: 16,
     },
     iconButton: {
         padding: 10,
