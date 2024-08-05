@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import { Inspiration } from '../types';
+import { Alert } from 'react-native';
 
 const db = SQLite.openDatabaseSync('inspirations.db');
 
@@ -17,10 +18,8 @@ export const initDb = async () => {
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
             );
         `);
-
-        console.log('Table created successfully');
     } catch (error) {
-        console.error('Error initializing database:', error);
+        Alert.alert('Error initializing database:');
     }
 };
 
@@ -32,21 +31,19 @@ export const addInspiration = async (inspiration: Inspiration): Promise<number |
             [quote, image_url]
         );
         if (result.lastInsertRowId) {
-            console.log(`Inspiration added with ID: ${result.lastInsertRowId}`);
             return result.lastInsertRowId;
         }
     } catch (error) {
-        console.error('Error adding inspiration:', error);
+        Alert.alert('Error adding inspiration:');
     }
     return undefined;
 };
-
 
 export const getInspirations = async (): Promise<Inspiration[]> => {
     try {
         return await db.getAllAsync<Inspiration>('SELECT * FROM inspirations');
     } catch (error) {
-        console.error('Error fetching inspirations:', error);
+        Alert.alert('Error fetching inspirations:');
         return [];
     }
 };
@@ -55,43 +52,42 @@ export const updateInspiration = async (id: number, inspiration: Partial<Inspira
     const { quote, image_url } = inspiration;
 
     if (!quote || !image_url) {
-        console.error('Quote and image URL are required to update an inspiration');
+        Alert.alert('Quote and image URL are required to update an inspiration');
         return;
     }
 
     try {
         const result = await db.runAsync(
             `UPDATE inspirations
-             SET quote = ?, image_url = ?, updated_at = CURRENT_TIMESTAMP
+             SET quote = ?,
+                 image_url = ?,
+                 updated_at = CURRENT_TIMESTAMP
              WHERE id = ?`,
             [quote, image_url, id]
         );
 
-        if (result.changes > 0) {
-            console.log(`Inspiration with ID: ${id} updated successfully`);
-        } else {
-            console.log(`No inspiration found with ID: ${id}`);
+        if (!result.changes) {
+            Alert.alert(`No inspiration found with ID: ${id}`);
         }
     } catch (error) {
-        console.error(`Error updating inspiration with ID: ${id}`, error);
+        Alert.alert(`Error updating inspiration with ID: ${id}`);
     }
 };
-
 
 export const deleteInspiration = async (id: number): Promise<void> => {
     try {
         const result = await db.runAsync(
-            `DELETE FROM inspirations WHERE id = ?`,
+            `DELETE
+             FROM inspirations
+             WHERE id = ?`,
             [id]
         );
 
-        if (result.changes > 0) {
-            console.log(`Inspiration with ID: ${id} deleted successfully`);
-        } else {
-            console.log(`No inspiration found with ID: ${id}`);
+        if (!result.changes) {
+            Alert.alert(`No inspiration found with ID: ${id}`);
         }
     } catch (error) {
-        console.error(`Error deleting inspiration with ID: ${id}`, error);
+        Alert.alert(`Error deleting inspiration with ID: ${id}`);
     }
 };
 

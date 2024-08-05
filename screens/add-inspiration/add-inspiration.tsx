@@ -207,7 +207,6 @@ const AddInspiration: React.FC = () => {
 
             Alert.alert('Success', 'Inspiration saved to gallery!');
         } catch (error) {
-            console.error('Error saving inspiration to gallery', error);
             Alert.alert('Error', 'Failed to save inspiration to gallery.');
         }
     };
@@ -251,15 +250,16 @@ const AddInspiration: React.FC = () => {
                         <View style={styles.iconButtonRow}>
                             <TouchableOpacity
                                 onPress={handleSave}
+                                disabled={!image || !quote}
                                 style={[
                                     styles.iconButton,
                                     {
-                                        borderColor: theme.PRIMARY,
+                                        borderColor: image && quote ? theme.PRIMARY : 'gray',
                                         borderWidth: 1,
                                     }
                                 ]}
                             >
-                                <Ionicons name="save-sharp" size={30} color={theme.PRIMARY}/>
+                                <Ionicons name="save-sharp" size={30} color={image && quote ? theme.PRIMARY : 'gray'}/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={saveToGallery}

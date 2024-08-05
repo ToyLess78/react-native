@@ -48,8 +48,6 @@ const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url 
     const handleDelete = () => {
         if (id !== undefined) {
             dispatch(removeInspiration(id));
-        } else {
-            console.log('Inspiration ID is undefined');
         }
     };
 

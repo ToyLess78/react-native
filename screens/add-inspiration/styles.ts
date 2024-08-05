@@ -32,10 +32,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     iconButtonRow: {
-        marginTop: 'auto',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingHorizontal: 16,
+        paddingTop: 80,
     },
     iconButton: {
         padding: 10,

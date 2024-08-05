@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API } from '../enums';
 import { getRandomNumber } from '../helpers';
 import type { GetImageResponseDto } from '../types';
+import { Alert } from 'react-native';
 
 const ImageIdRange = {
     min: 1,
@@ -25,7 +26,7 @@ export const getRandomImage = async (): Promise<GetImageResponseDto> => {
                 return response.data;
             }
         } catch (error) {
-            console.error('Error while fetching random image', error);
+            Alert.alert('Error while fetching random image');
         }
 
         attempts += 1;

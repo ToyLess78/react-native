@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API } from '../enums';
 import { GetQuoteResponseDto } from '../types';
+import { Alert } from 'react-native';
 
 export const getRandomQuote = async (): Promise<GetQuoteResponseDto> => {
 	let quoteData: GetQuoteResponseDto = {
@@ -20,19 +21,15 @@ export const getRandomQuote = async (): Promise<GetQuoteResponseDto> => {
 
 			quoteData = response.data;
 
-			if (!quoteData.quoteText) {
-				console.warn('Received empty quoteText, retrying...');
-			}
-
 			attempts++;
 		}
 
 		if (!quoteData.quoteText) {
-			console.error('Failed to fetch a valid quote after multiple attempts');
+			Alert.alert('Failed to fetch a valid quote after multiple attempts');
 		}
 
 	} catch (error) {
-		console.error('Error while fetching quote', error);
+		Alert.alert('Error while fetching quote');
 	}
 
 	return quoteData;
