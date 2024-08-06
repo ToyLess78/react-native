@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Dashboard, Settings } from '../screens';
 import { BottomTabsParamList } from '../types';
 import { ROUTE_NAME } from '../enums';
-import { useTheme } from "../hooks";
+import { useTheme } from '../hooks';
 
 const BottomTabs = createBottomTabNavigator<BottomTabsParamList>();
 
@@ -51,7 +51,7 @@ const BottomTabsNavigator = () => {
             <BottomTabs.Screen
                 name={ROUTE_NAME.DASHBOARD}
                 component={Dashboard}
-                options={{ title: 'Home' }}
+                options={{title: 'Dashboard'}}
             />
             <BottomTabs.Screen
                 name={ROUTE_NAME.SETTINGS}

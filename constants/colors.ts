@@ -5,6 +5,7 @@ const COLORS_LIGHT = {
 	GREY: "#BDBDBD",
 	FONT_MAIN: "#292827",
 	FONT_INVERSE: "#FFFFFF",
+	ERROR: "#FF0000",
 } as const;
 
 const COLORS_DARK = {
@@ -14,6 +15,7 @@ const COLORS_DARK = {
 	GREY: "#BDBDBD",
 	FONT_MAIN: "#000000",
 	FONT_INVERSE: "#FFFFFF",
+	ERROR: "#FF5733",
 } as const;
 
 export { COLORS_DARK, COLORS_LIGHT };

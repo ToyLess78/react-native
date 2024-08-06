@@ -31,6 +31,17 @@ const styles = StyleSheet.create({
     iconContainer: {
         marginRight: 10,
     },
+    iconButtonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingTop: 80,
+    },
+    iconButton: {
+        padding: 10,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: 'transparent',
+    },
 });
 
 export default styles;
