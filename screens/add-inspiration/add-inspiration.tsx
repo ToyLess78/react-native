@@ -21,7 +21,6 @@ import { Inspiration, RootStackParamList } from '../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from './styles';
 import { createInspiration, modifyInspiration, removeInspiration } from '../../store/inspirationSlice';
-import { addInspiration } from '../../store/dbUtils';
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { useGestureContext } from '../../contexts/gesture-context';
@@ -103,31 +102,25 @@ const AddInspiration: React.FC = () => {
         }
     };
 
-    const handleSave = async () => {
+    const handleSave = () => {
         if (image && quote) {
+            const newInspiration: Omit<Inspiration, 'id'> = {
+                quote,
+                image_url: image as string,
+            };
+
             if (inspiration && inspiration.id !== undefined) {
-                const updatedInspiration: Inspiration = {
-                    ...inspiration,
-                    quote,
-                    image_url: image as string,
-                    id: inspiration.id
-                };
-                dispatch(modifyInspiration(updatedInspiration));
+                dispatch(modifyInspiration({ ...newInspiration, id: inspiration.id }));
             } else {
-                const newInspiration: Inspiration = {
-                    id: 1,
-                    quote,
-                    image_url: image as string,
-                };
-                const newId = await addInspiration(newInspiration);
-                if (newId) {
-                    newInspiration.id = newId;
-                    dispatch(createInspiration(newInspiration));
-                }
+                dispatch(createInspiration(newInspiration));
             }
+
             navigation.goBack();
+        } else {
+            Alert.alert('Incomplete', 'Please provide both an image and a quote.');
         }
     };
+
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({

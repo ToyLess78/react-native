@@ -23,7 +23,7 @@ export const initDb = async () => {
     }
 };
 
-export const addInspiration = async (inspiration: Inspiration): Promise<number | undefined> => {
+export const addInspiration = async (inspiration: Omit<Inspiration, 'id'>): Promise<number | undefined> => {
     const { quote, image_url } = inspiration;
     try {
         const result = await db.runAsync(
@@ -38,6 +38,7 @@ export const addInspiration = async (inspiration: Inspiration): Promise<number |
     }
     return undefined;
 };
+
 
 export const getInspirations = async (): Promise<Inspiration[]> => {
     try {
