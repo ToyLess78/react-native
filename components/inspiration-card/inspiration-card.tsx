@@ -17,11 +17,12 @@ interface InspirationCardProps {
     id: number;
     quote: string;
     image_url: string | ImageSourcePropType;
+    disableSwipe?: boolean;
 }
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Dashboard'>;
 
-const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url }) => {
+const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url, disableSwipe= true }) => {
     const swipeableRef = useRef<Swipeable>(null);
     const { activeSwipeable, setActiveSwipeable } = useGestureContext();
     const themeContext = useTheme();
@@ -48,6 +49,8 @@ const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url 
     const handleDelete = () => {
         if (id !== undefined) {
             dispatch(removeInspiration(id));
+        } else {
+            console.log('Inspiration ID is undefined');
         }
     };
 
@@ -58,33 +61,50 @@ const InspirationCard: React.FC<InspirationCardProps> = ({ id, quote, image_url 
     };
 
     return (
-        <Swipeable
-            ref={swipeableRef}
-            onSwipeableOpen={handleSwipeableOpen}
-            renderLeftActions={() => (
-                <TouchableOpacity style={[styles.leftAction]} onPress={handleEdit}>
-                    <Ionicons name="create" size={30} color={theme.SECONDARY} />
-                </TouchableOpacity>
-            )}
-            renderRightActions={() => (
-                <TouchableOpacity style={[styles.rightAction]} onPress={handleDelete}>
-                    <Ionicons name="trash" size={30} color={theme.PRIMARY} />
-                </TouchableOpacity>
-            )}
-        >
-            <View style={styles.cardContainer}>
-                <ImageBackground
-                    source={typeof image_url === 'string' ? { uri: image_url } : image_url}
-                    style={styles.backgroundImage}
-                    imageStyle={styles.imageStyle}
+        <View>
+            {disableSwipe ? (
+                <View style={styles.cardContainer}>
+                    <ImageBackground
+                        source={typeof image_url === 'string' ? { uri: image_url } : image_url}
+                        style={styles.backgroundImage}
+                        imageStyle={styles.imageStyle}
+                    >
+                        <View style={[styles.overlay, { backgroundColor: `${theme.APP_BACKGROUND}4D` }]} />
+                        <View style={textContainerStyle}>
+                            {quote ? <Text style={[styles.quoteText, { color: theme.FONT_INVERSE }]}>{quote}</Text> : null}
+                        </View>
+                    </ImageBackground>
+                </View>
+            ) : (
+                <Swipeable
+                    ref={swipeableRef}
+                    onSwipeableOpen={handleSwipeableOpen}
+                    renderLeftActions={() => (
+                        <TouchableOpacity style={[styles.leftAction]} onPress={handleEdit}>
+                            <Ionicons name="create" size={30} color={theme.SECONDARY} />
+                        </TouchableOpacity>
+                    )}
+                    renderRightActions={() => (
+                        <TouchableOpacity style={[styles.rightAction]} onPress={handleDelete}>
+                            <Ionicons name="trash" size={30} color={theme.PRIMARY} />
+                        </TouchableOpacity>
+                    )}
                 >
-                    <View style={[styles.overlay, { backgroundColor: `${theme.APP_BACKGROUND}4D` }]} />
-                    <View style={textContainerStyle}>
-                        {quote ? <Text style={[styles.quoteText, { color: theme.FONT_INVERSE }]}>{quote}</Text> : null}
+                    <View style={styles.cardContainer}>
+                        <ImageBackground
+                            source={typeof image_url === 'string' ? { uri: image_url } : image_url}
+                            style={styles.backgroundImage}
+                            imageStyle={styles.imageStyle}
+                        >
+                            <View style={[styles.overlay, { backgroundColor: `${theme.APP_BACKGROUND}4D` }]} />
+                            <View style={textContainerStyle}>
+                                {quote ? <Text style={[styles.quoteText, { color: theme.FONT_INVERSE }]}>{quote}</Text> : null}
+                            </View>
+                        </ImageBackground>
                     </View>
-                </ImageBackground>
-            </View>
-        </Swipeable>
+                </Swipeable>
+            )}
+        </View>
     );
 };
 
