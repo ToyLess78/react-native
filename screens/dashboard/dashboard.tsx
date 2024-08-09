@@ -102,6 +102,7 @@ export const Dashboard: React.FC = () => {
                                 id={item.id}
                                 quote={item.quote || ''}
                                 image_url={item.image_url || require('../../assets/no-image.jpg')}
+                                disableSwipe={false}
                             />
                         )}
                         ListEmptyComponent={renderListEmptyComponent}

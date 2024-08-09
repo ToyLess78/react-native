@@ -21,11 +21,17 @@ export const fetchInspirations = createAsyncThunk('inspirations/fetchInspiration
 
 export const createInspiration = createAsyncThunk(
     'inspirations/createInspiration',
-    async (inspiration: Inspiration) => {
-        await addInspiration(inspiration);
-        return inspiration;
+    async (inspiration: Omit<Inspiration, 'id'>) => {
+        const newId = await addInspiration(inspiration);
+        if (newId !== undefined) {
+            const fullInspiration: Inspiration = { ...inspiration, id: newId };
+            return fullInspiration;
+        } else {
+            throw new Error('Failed to create inspiration');
+        }
     }
 );
+
 
 export const modifyInspiration = createAsyncThunk(
     'inspirations/modifyInspiration',
