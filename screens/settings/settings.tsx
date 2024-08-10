@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Switch, Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../hooks';
 import { ScreenBackground } from '../../components';
 import { COLORS_DARK } from '../../constants';
 import * as Notifications from 'expo-notifications';
 import styles from './styles';
+import { ALERT_TYPE } from 'react-native-alert-notification';
+import { showAlert } from '../../helpers';
 
 export const Settings: React.FC = () => {
     const themeContext = useTheme();
@@ -41,10 +43,10 @@ export const Settings: React.FC = () => {
                     repeats: true,
                 },
             });
-            Alert.alert('Notifications enabled', 'You will receive notifications every 8 hours.');
+            showAlert(ALERT_TYPE.SUCCESS, 'Notifications Enabled', 'You will receive notifications every 8 hours.');
         } else {
             await Notifications.cancelAllScheduledNotificationsAsync();
-            Alert.alert('Notifications disabled', 'You will no longer receive notifications.');
+            showAlert(ALERT_TYPE.WARNING, 'Notifications Disabled', 'You will no longer receive notifications.');
         }
     };
 
