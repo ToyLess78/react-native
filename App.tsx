@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { RootNavigator } from './navigation';
@@ -10,6 +10,9 @@ import { Provider } from 'react-redux';
 import { GestureProvider } from './contexts/gesture-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as Notifications from 'expo-notifications';
+import { CustomAlertNotification } from './components';
+import { showAlert } from './helpers';
+import { ALERT_TYPE } from 'react-native-alert-notification';
 
 export default function App() {
 	const fontsLoaded = useLoadFonts();
@@ -18,14 +21,14 @@ export default function App() {
 		const requestPermissions = async () => {
 			const {status} = await Notifications.requestPermissionsAsync();
 			if (status !== 'granted') {
-				Alert.alert('Permission for notifications was denied');
+				showAlert(ALERT_TYPE.WARNING, 'Permission Denied', 'Permission for notifications was denied.');
 			}
 		};
 
 		requestPermissions();
 
-		const notificationListener = Notifications.addNotificationResponseReceivedListener(response => {
-			Alert.alert('Notification Clicked');
+		const notificationListener = Notifications.addNotificationResponseReceivedListener(_ => {
+			showAlert(ALERT_TYPE.INFO, 'Notification Clicked', 'You clicked on the notification.');
 		});
 
 		return () => {
@@ -47,9 +50,11 @@ export default function App() {
 				<GestureProvider>
 					<SafeAreaProvider>
 						<ThemeProvider>
-							<NavigationContainer>
-								<RootNavigator/>
-							</NavigationContainer>
+							<CustomAlertNotification>
+								<NavigationContainer>
+									<RootNavigator/>
+								</NavigationContainer>
+							</CustomAlertNotification>
 						</ThemeProvider>
 					</SafeAreaProvider>
 				</GestureProvider>
