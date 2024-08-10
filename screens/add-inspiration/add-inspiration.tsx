@@ -212,7 +212,7 @@ const AddInspiration: React.FC = () => {
                     </View>
                     <View style={styles.buttonRow}>
                         <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton}/>
-                        <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage}/>
+                        <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} style={styles.flexButton}/>
                     </View>
                     <TextInput
                         style={[styles.textInput, {color: theme.SECONDARY, borderColor: theme.PRIMARY}]}
