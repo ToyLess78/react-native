@@ -242,12 +242,12 @@ const AddInspiration: React.FC = () => {
                                 style={[
                                     styles.iconButton,
                                     {
-                                        borderColor: image && quote ? theme.PRIMARY : 'gray',
+                                        borderColor: image && quote ? theme.PRIMARY : theme.OPACITY,
                                         borderWidth: 1,
                                     }
                                 ]}
                             >
-                                <Ionicons name="save-sharp" size={30} color={image && quote ? theme.PRIMARY : 'gray'}/>
+                                <Ionicons name="save-sharp" size={30} color={image && quote ? theme.PRIMARY : theme.OPACITY}/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={saveToGallery}
@@ -255,7 +255,7 @@ const AddInspiration: React.FC = () => {
                                 style={[
                                     styles.iconButton,
                                     {
-                                        backgroundColor: image && quote ? theme.PRIMARY : 'gray',
+                                        backgroundColor: image && quote ? theme.PRIMARY : theme.OPACITY,
                                     }
                                 ]}
                             >
