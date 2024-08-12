@@ -24,6 +24,8 @@ import { createInspiration, modifyInspiration, removeInspiration } from '../../s
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
 import { useGestureContext } from '../../contexts/gesture-context';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { showAlert } from '../../helpers';
 
 type AddInspirationScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AddInspiration'>;
 type AddInspirationRouteProp = RouteProp<RootStackParamList, 'AddInspiration'>;
@@ -78,27 +80,21 @@ const AddInspiration: React.FC = () => {
 
     const handleDelete = () => {
         if (inspiration && inspiration.id !== undefined) {
-            Alert.alert(
-                'Confirm Deletion',
-                'Are you sure you want to delete this inspiration?',
-                [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
-                    {
-                        text: 'Delete',
-                        onPress: () => {
-                            if (inspiration && inspiration.id !== undefined) {
-                                dispatch(removeInspiration(inspiration.id));
-                                navigation.goBack();
-                            }
-                        },
-                        style: 'destructive',
-                    },
-                ],
-                {cancelable: false}
-            );
+            Dialog.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Confirm Deletion',
+                textBody: 'Are you sure you want to delete this inspiration?',
+                button: 'Delete',
+                autoClose: false,
+                closeOnOverlayTap: true,
+                onPressButton: () => {
+                    if (inspiration && inspiration.id !== undefined) {
+                        dispatch(removeInspiration(inspiration.id));
+                        navigation.goBack();
+                        Dialog.hide();
+                    }
+                },
+            });
         }
     };
 
@@ -117,10 +113,9 @@ const AddInspiration: React.FC = () => {
 
             navigation.goBack();
         } else {
-            Alert.alert('Incomplete', 'Please provide both an image and a quote.');
+            showAlert(ALERT_TYPE.WARNING, 'Incomplete', 'Please provide both an image and a quote.');
         }
     };
-
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -169,19 +164,19 @@ const AddInspiration: React.FC = () => {
 
     const saveToGallery = async () => {
         if (!image || !quote) {
-            Alert.alert('Incomplete Inspiration', 'Please complete the inspiration card before saving.');
+            showAlert(ALERT_TYPE.WARNING, 'Incomplete Inspiration', 'Please complete the inspiration card before saving.');
             return;
         }
 
         const {status} = await MediaLibrary.requestPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permission Required', 'Permission to access gallery is required to save inspiration.');
+            showAlert(ALERT_TYPE.WARNING, 'Permission Denied', 'Permission for notifications was denied.');
             return;
         }
 
         try {
             if (!inspirationCardRef.current) {
-                Alert.alert('Error', 'Failed to capture image. Please try again.');
+                showAlert(ALERT_TYPE.DANGER, 'Error', 'Failed to capture image. Please try again.');
                 return;
             }
             const uri = await captureRef(inspirationCardRef.current, {
@@ -190,17 +185,17 @@ const AddInspiration: React.FC = () => {
             });
 
             if (!uri) {
-                Alert.alert('Error', 'Failed to capture image. Please try again.');
+                showAlert(ALERT_TYPE.DANGER, 'Error', 'Failed to capture image. Please try again.');
                 return;
             }
 
             const asset = await MediaLibrary.createAssetAsync(uri);
 
             await MediaLibrary.createAlbumAsync('Inspirations', asset, false);
+            showAlert(ALERT_TYPE.SUCCESS, 'Success', 'Inspiration saved to gallery!');
 
-            Alert.alert('Success', 'Inspiration saved to gallery!');
         } catch (error) {
-            Alert.alert('Error', 'Failed to save inspiration to gallery.');
+            showAlert(ALERT_TYPE.DANGER, 'Error', 'Failed to save inspiration to gallery!');
         }
     };
 
@@ -217,7 +212,7 @@ const AddInspiration: React.FC = () => {
                     </View>
                     <View style={styles.buttonRow}>
                         <CustomButton title="Choose Image" onPress={showImagePickerAlert} style={styles.flexButton}/>
-                        <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage}/>
+                        <CustomButton title="Get a Random Image" onPress={getRandomInspirationImage} style={styles.flexButton}/>
                     </View>
                     <TextInput
                         style={[styles.textInput, {color: theme.SECONDARY, borderColor: theme.PRIMARY}]}
@@ -247,12 +242,12 @@ const AddInspiration: React.FC = () => {
                                 style={[
                                     styles.iconButton,
                                     {
-                                        borderColor: image && quote ? theme.PRIMARY : 'gray',
+                                        borderColor: image && quote ? theme.PRIMARY : theme.OPACITY,
                                         borderWidth: 1,
                                     }
                                 ]}
                             >
-                                <Ionicons name="save-sharp" size={30} color={image && quote ? theme.PRIMARY : 'gray'}/>
+                                <Ionicons name="save-sharp" size={30} color={image && quote ? theme.PRIMARY : theme.OPACITY}/>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={saveToGallery}
@@ -260,7 +255,7 @@ const AddInspiration: React.FC = () => {
                                 style={[
                                     styles.iconButton,
                                     {
-                                        backgroundColor: image && quote ? theme.PRIMARY : 'gray',
+                                        backgroundColor: image && quote ? theme.PRIMARY : theme.OPACITY,
                                     }
                                 ]}
                             >

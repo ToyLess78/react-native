@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     iconButtonRow: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        paddingTop: 80,
+        paddingTop: '35%',
     },
     iconButton: {
         padding: 10,

@@ -1,9 +1,8 @@
 import axios from 'axios';
-
 import { API } from '../enums';
-import { getRandomNumber } from '../helpers';
+import { getRandomNumber, showAlert } from '../helpers';
 import type { GetImageResponseDto } from '../types';
-import { Alert } from 'react-native';
+import { ALERT_TYPE } from 'react-native-alert-notification';
 
 const ImageIdRange = {
     min: 1,
@@ -13,6 +12,7 @@ const ImageIdRange = {
 export const getRandomImage = async (): Promise<GetImageResponseDto> => {
     const maxRetries = 5;
     let attempts = 0;
+    let lastError: Error | null = null;
 
     while (attempts < maxRetries) {
         try {
@@ -26,11 +26,13 @@ export const getRandomImage = async (): Promise<GetImageResponseDto> => {
                 return response.data;
             }
         } catch (error) {
-            Alert.alert('Error while fetching random image');
+            lastError = error instanceof Error ? error : new Error('Unknown error');
         }
 
         attempts += 1;
     }
+
+    showAlert(ALERT_TYPE.DANGER, 'Error', 'Error while fetching random image');
 
     return {
         id: '0',

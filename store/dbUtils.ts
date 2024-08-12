@@ -1,6 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { Inspiration } from '../types';
-import { Alert } from 'react-native';
+import { showAlert } from '../helpers';
+import { ALERT_TYPE } from 'react-native-alert-notification';
 
 const db = SQLite.openDatabaseSync('inspirations.db');
 
@@ -19,7 +20,7 @@ export const initDb = async () => {
             );
         `);
     } catch (error) {
-        Alert.alert('Error initializing database:');
+        showAlert(ALERT_TYPE.DANGER, 'Error', 'Error initializing database');
     }
 };
 
@@ -34,17 +35,16 @@ export const addInspiration = async (inspiration: Omit<Inspiration, 'id'>): Prom
             return result.lastInsertRowId;
         }
     } catch (error) {
-        Alert.alert('Error adding inspiration:');
+        showAlert(ALERT_TYPE.DANGER, 'Error', 'Error adding inspiration');
     }
     return undefined;
 };
-
 
 export const getInspirations = async (): Promise<Inspiration[]> => {
     try {
         return await db.getAllAsync<Inspiration>('SELECT * FROM inspirations');
     } catch (error) {
-        Alert.alert('Error fetching inspirations:');
+        showAlert(ALERT_TYPE.DANGER, 'Error', 'Error fetching inspirations');
         return [];
     }
 };
@@ -53,7 +53,7 @@ export const updateInspiration = async (id: number, inspiration: Partial<Inspira
     const { quote, image_url } = inspiration;
 
     if (!quote || !image_url) {
-        Alert.alert('Quote and image URL are required to update an inspiration');
+        showAlert(ALERT_TYPE.WARNING, 'Warning', 'Quote and image URL are required to update an inspiration');
         return;
     }
 
@@ -68,10 +68,10 @@ export const updateInspiration = async (id: number, inspiration: Partial<Inspira
         );
 
         if (!result.changes) {
-            Alert.alert(`No inspiration found with ID: ${id}`);
+            showAlert(ALERT_TYPE.WARNING, 'Warning', `No inspiration found with ID: ${id}`);
         }
     } catch (error) {
-        Alert.alert(`Error updating inspiration with ID: ${id}`);
+        showAlert(ALERT_TYPE.DANGER, 'Error', `Error updating inspiration with ID: ${id}`);
     }
 };
 
@@ -85,11 +85,9 @@ export const deleteInspiration = async (id: number): Promise<void> => {
         );
 
         if (!result.changes) {
-            Alert.alert(`No inspiration found with ID: ${id}`);
+            showAlert(ALERT_TYPE.WARNING, 'Warning', `No inspiration found with ID: ${id}`);
         }
     } catch (error) {
-        Alert.alert(`Error deleting inspiration with ID: ${id}`);
+        showAlert(ALERT_TYPE.DANGER, 'Error', `Error deleting inspiration with ID: ${id}`);
     }
 };
-
-
