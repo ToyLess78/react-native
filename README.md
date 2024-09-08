@@ -21,7 +21,8 @@ Installation
 2.  Run `npm install`.
 3.  Start with `npm start`.
 
+
 Demo
 ----
 
-https://toyless78.github.io/homepage/assets/demo.mov
+[https://toyless78.github.io/homepage/assets/demo.mov](https://github.com/user-attachments/assets/f3f27f97-dadf-4d6a-b165-dbd120eec8d4)
