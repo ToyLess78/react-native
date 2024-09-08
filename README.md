@@ -24,6 +24,6 @@ Installation
 Demo
 ----
 
-https://github.com/ToyLess78/react-native/assets/demo/demo.mov
+https://github.com/ToyLess78/react-native/blob/main/assets/demo/demo.mov
 
 [Watch the demo](assets/demo/demo.mov)
