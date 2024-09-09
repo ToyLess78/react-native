@@ -1,4 +1,4 @@
-Here's an updated version of your README with a video link:
+
 
 React Native Inspiration App
 ============================
